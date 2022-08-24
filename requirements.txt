@@ -1,0 +1,7 @@
+click
+dvc
+streamlit
+tensorflow
+scikit-learn
+google-cloud-storage
+gcsfs

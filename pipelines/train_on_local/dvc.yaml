@@ -1,0 +1,55 @@
+stages:
+  read_raw_local:
+    cmd: python ..\..\src\read_raw_local.py
+    deps:
+      - ..\..\src\read_raw_local.py
+      - ..\..\data\raw
+    outs:
+      - ..\..\data\interim\interim_data.csv
+
+  build_features:
+    cmd: python ..\..\src\build_features.py
+    deps:
+      - ..\..\src\build_features.py
+      - ..\..\data\interim\interim_data.csv
+    outs:
+      - ..\..\data\processed\processed_data.csv
+
+  split_data:
+    cmd: python ..\..\src\split_data.py
+    deps:
+      - ..\..\src\split_data.py
+      - ..\..\data\processed\processed_data.csv
+    outs:
+      - ..\..\data\processed\train\train_data.csv
+      - ..\..\data\processed\test\test_data.csv
+
+  train:
+    cmd: python ..\..\src\train.py
+    deps:
+      - ..\..\src\train.py
+      - ..\..\data\processed\train\train_data.csv
+    outs:
+      - ..\..\models\
+    params:
+      - one_feature
+      - models
+      - model.lstm_units
+      - model.look_back
+      - train.learning_rate
+      - train.epochs
+      - train.seed
+      - train.patience
+      - train.verbosity
+      - train.batch_size
+
+  evaluate:
+    cmd: python ..\..\src\evaluate.py
+    deps:
+      - ..\..\src\evaluate.py
+      - ..\..\data\processed\test\test_data.csv
+      - ..\..\models\
+    outs:
+      - ..\..\metrics
+    params:
+      - one_feature
