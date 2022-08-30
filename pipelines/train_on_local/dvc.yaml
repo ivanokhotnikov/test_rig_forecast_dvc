@@ -1,6 +1,6 @@
 stages:
   read_raw_local:
-    cmd: python ..\..\src\read_raw_local.py
+    cmd: python ..\..\src\read_raw_local.py ..\..\data\raw ..\..\data\interim
     deps:
       - ..\..\src\read_raw_local.py
       - ..\..\data\raw
@@ -8,7 +8,7 @@ stages:
       - ..\..\data\interim\interim_data.csv
 
   build_features:
-    cmd: python ..\..\src\build_features.py
+    cmd: python ..\..\src\build_features.py ..\..\data\interim ..\..\data\processed
     deps:
       - ..\..\src\build_features.py
       - ..\..\data\interim\interim_data.csv
@@ -16,16 +16,18 @@ stages:
       - ..\..\data\processed\processed_data.csv
 
   split_data:
-    cmd: python ..\..\src\split_data.py
+    cmd: python ..\..\src\split_data.py ..\..\data\processed ..\..\data\processed\train ..\..\data\processed\test
     deps:
       - ..\..\src\split_data.py
       - ..\..\data\processed\processed_data.csv
     outs:
       - ..\..\data\processed\train\train_data.csv
       - ..\..\data\processed\test\test_data.csv
+    params:
+      - split_data.train_data_size
 
   train:
-    cmd: python ..\..\src\train.py
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
     deps:
       - ..\..\src\train.py
       - ..\..\data\processed\train\train_data.csv
@@ -33,23 +35,29 @@ stages:
       - ..\..\models\
     params:
       - one_feature
-      - models
       - model.lstm_units
       - model.look_back
       - train.learning_rate
       - train.epochs
       - train.seed
       - train.patience
-      - train.verbosity
       - train.batch_size
+    metrics:
+      - ..\..\metrics\train.json:
+          cache: false
+    plots:
+      - ..\metrics\train_logs.csv
 
   evaluate:
-    cmd: python ..\..\src\evaluate.py
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
     deps:
       - ..\..\src\evaluate.py
       - ..\..\data\processed\test\test_data.csv
       - ..\..\models\
-    outs:
-      - ..\..\metrics
     params:
       - one_feature
+    metrics:
+      - ..\..\metrics\eval.json:
+          cache: false
+    plots:
+      - ..\metrics\test_logs.csv

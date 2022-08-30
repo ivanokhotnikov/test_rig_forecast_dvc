@@ -1,20 +1,13 @@
-raw_data: '..\..\data\raw\'
-interim_data: '..\..\data\interim\interim_data.csv'
-processed_data: '..\..\data\processed\processed_data.csv'
-train_data: '..\..\data\processed\train\train_data.csv'
-test_data: '..\..\data\processed\test\test_data.csv'
-models: '..\..\models\'
-metrics: '..\..\metrics\'
+one_feature: false
 
-one_feature: True
-train_split: 0.8
+split_data:
+  train_data_size: 0.8
 
 train:
-  learning_rate: 1
-  epochs: 5
+  learning_rate: .5
+  epochs: 3
   seed: 2507
   patience: 5
-  verbosity: 1
   batch_size: 256
 
 model:

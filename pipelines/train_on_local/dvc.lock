@@ -1,41 +1,45 @@
 schema: '2.0'
 stages:
   read_raw_local:
-    cmd: python ..\..\src\read_raw_local.py
+    cmd: python ..\..\src\read_raw_local.py ..\..\data\raw ..\..\data\interim
     deps:
     - path: ..\..\data\raw
       md5: 0264b5e4b9d8feff6ae62f3d9e3e610c.dir
       size: 352350125
       nfiles: 201
     - path: ..\..\src\read_raw_local.py
-      md5: 2141d3464315730bbffaae157b0b0fbe
-      size: 2135
+      md5: 1b2a082674d56a49e646b5d834821575
+      size: 2220
     outs:
     - path: ..\..\data\interim\interim_data.csv
       md5: 39b565bf62c07a9cd92a4efc64320056
       size: 284558766
   build_features:
-    cmd: python ..\..\src\build_features.py
+    cmd: python ..\..\src\build_features.py ..\..\data\interim ..\..\data\processed
     deps:
     - path: ..\..\data\interim\interim_data.csv
       md5: 39b565bf62c07a9cd92a4efc64320056
       size: 284558766
     - path: ..\..\src\build_features.py
-      md5: 1c6250ae80e0ac2149f3287c8433023f
-      size: 1234
+      md5: 9c1a463089ecc8cdbe0c06c482791ebc
+      size: 1438
     outs:
     - path: ..\..\data\processed\processed_data.csv
       md5: 0486085d24a5003ab410b671d849ed70
       size: 153694637
   split_data:
-    cmd: python ..\..\src\split_data.py
+    cmd: python ..\..\src\split_data.py ..\..\data\processed ..\..\data\processed\train
+      ..\..\data\processed\test
     deps:
     - path: ..\..\data\processed\processed_data.csv
       md5: 0486085d24a5003ab410b671d849ed70
       size: 153694637
     - path: ..\..\src\split_data.py
-      md5: b343ece6e8e58698801f012085b83641
-      size: 843
+      md5: f89ae4cfb87a60287e515c5157b2674f
+      size: 1234
+    params:
+      params.yaml:
+        split_data.train_data_size: 0.8
     outs:
     - path: ..\..\data\processed\test\test_data.csv
       md5: 5cb4d5b5fab99b5643a5b9352bc97f8a
@@ -44,49 +48,49 @@ stages:
       md5: 3082b0b493d901debe77706996d36499
       size: 122798075
   train:
-    cmd: python ..\..\src\train.py
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
     deps:
     - path: ..\..\data\processed\train\train_data.csv
       md5: 3082b0b493d901debe77706996d36499
       size: 122798075
     - path: ..\..\src\train.py
-      md5: 8703846bfb6f0eb8b3a69141f862fec0
-      size: 3500
+      md5: a6a1341ecadd39122d2d8c604158f7a3
+      size: 3260
     params:
       params.yaml:
         model.look_back: 120
         model.lstm_units: 5
-        models: ..\..\models\
         one_feature: true
         train.batch_size: 256
-        train.epochs: 5
-        train.learning_rate: 1
+        train.epochs: 3
+        train.learning_rate: 0.5
         train.patience: 5
         train.seed: 2507
-        train.verbosity: 1
     outs:
+    - path: ..\..\metrics\train.json
+      md5: 07cefb2f91f2e7716914c1bae44c6c56
+      size: 356
     - path: ..\..\models\
-      md5: 381e257f05d5dce889d986a03b409e6d.dir
+      md5: d9c3bf7e92b7e74365e02aa90ba8aaab.dir
       size: 29328
       nfiles: 2
   evaluate:
-    cmd: python ..\..\src\evaluate.py
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
     deps:
     - path: ..\..\data\processed\test\test_data.csv
       md5: 5cb4d5b5fab99b5643a5b9352bc97f8a
       size: 30875335
     - path: ..\..\models\
-      md5: 381e257f05d5dce889d986a03b409e6d.dir
+      md5: d9c3bf7e92b7e74365e02aa90ba8aaab.dir
       size: 29328
       nfiles: 2
     - path: ..\..\src\evaluate.py
-      md5: 4fa150c611531f9c957eda5f62ce7284
-      size: 2008
+      md5: 8ca05f5cd0cc0c5c618e21502ecf8d41
+      size: 2084
     params:
       params.yaml:
         one_feature: true
     outs:
-    - path: ..\..\metrics
-      md5: 53fee8e84dbb05c81d9db35defa59cae.dir
-      size: 131
-      nfiles: 1
+    - path: ..\..\metrics\eval.json
+      md5: 3c5ad58299f92708b366145f685965de
+      size: 75

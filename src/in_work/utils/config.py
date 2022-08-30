@@ -1,7 +1,10 @@
-from . import add_power_features
-from . import add_time_features
-from . import remove_step_zero
-from . import create_sequences
+import os
+
+DATA_PATH = os.path.join('..', 'data')
+IMAGES_PATH = os.path.join('.', 'images')
+MODELS_PATH = os.path.join('.', 'models')
+LOCAL_DATA_PATH = os.path.join('.', 'data')
+PREDICTIONS_PATH = os.path.join('.', 'predictions')
 
 RAW_FORECAST_FEATURES = [
     'TIME', 'STEP', 'HSU DEMAND', 'M1 SPEED', 'M1 CURRENT', 'M1 TORQUE',
@@ -30,8 +33,6 @@ ENGINEERED_FEATURES = [
 PRESSURE_TEMPERATURE = ['PT4', 'HSU IN', 'TT2', 'HSU OUT']
 VIBRATIONS = ['Vibration 1', ' Vibration 2']
 COMMANDS = ['TIME', ' DATE', 'STEP', 'HSU DEMAND', 'PT4 SETPOINT']
-TIME_FEATURES = ['DURATION', 'RUNNING SECONDS', 'RUNNING HOURS']
-UNIT_FEATURES = ['UNIT', 'TEST', 'ARMANI']
 FEATURES_NO_TIME = [
     f for f in RAW_FORECAST_FEATURES if f not in ('TIME', ' DATE')
 ]
@@ -39,4 +40,12 @@ FEATURES_NO_TIME_AND_COMMANDS = [
     f for f in FEATURES_NO_TIME if f not in COMMANDS
 ]
 
-FORECAST_FEATURES = ENGINEERED_FEATURES +  VIBRATIONS
+FORECAST_FEATURES = ENGINEERED_FEATURES + PRESSURE_TEMPERATURE + VIBRATIONS
+TIME_FEATURES = ['TIME', 'DURATION', 'TOTAL SECONDS', 'RUNNING HOURS']
+
+FOLDS = 5
+SEED = 42
+VERBOSITY = 1
+OPTIMIZATION_TIME_BUDGET = 5 * 60 * 60
+TIME_STEPS = 120
+EARLY_STOPPING = 6
