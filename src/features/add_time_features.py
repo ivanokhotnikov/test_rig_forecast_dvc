@@ -3,28 +3,18 @@ import pandas as pd
 
 
 def add_time_features(df):
-    """
-    Add time features to dataframe.
-    
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        Dataframe to add time features to.
+    """Adds duration, running second and running hours features to the dataframe, returns the modified dataframe.
 
-    Returns
-    -------
-    pandas.DataFrame
-        Dataframe with time features added.
+    Args:
+        df (pd.DataFrame): The dataframe to modify
+
+    Returns:
+        pd.DataFrame: The modified dataframe
     """
-    # df['TIME'] = pd.to_datetime(df['TIME'], errors='coerce').dt.time
-    # df[' DATE'] = pd.to_datetime(df[' DATE'], errors='coerce')
-    # # df['TIME'] = pd.to_datetime(range(len(df)),
-    # #                             unit='s',
-    # #                             origin=f'{df[" DATE"].min()} 00:00:00')
     df['DURATION'] = pd.to_timedelta(range(len(df)), unit='s')
-    df['RUNNING SECONDS'] = (pd.to_timedelta(range(
+    df['RUNNING_SECONDS'] = (pd.to_timedelta(range(
         len(df)), unit='s').total_seconds()).astype(np.uint64)
-    df['RUNNING HOURS'] = (df['RUNNING SECONDS'] / 3600).astype(np.float64)
+    df['RUNNING_HOURS'] = (df['RUNNING_SECONDS'] / 3600).astype(np.float64)
     return df
 
 

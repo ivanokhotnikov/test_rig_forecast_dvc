@@ -13,23 +13,26 @@ from features.remove_step_zero import remove_step_zero
 @click.argument('local_processed_data_path', type=click.Path(exists=False))
 def build_features(local_interim_data_path, local_processed_data_path):
     """
-    Build features from interim data.
+    Read the interim data, build features (float down casting, removes NaNs and the step zero data, calculates and adds to the processed data the power and time features), saves the processed data.
 
-    Returnss
-    -------
-    None
+    Args:
+        local_interim_data_path (str): Interim data directory
+        local_processed_data_path (str): Processed data directory
     """
     interim_df = pd.read_csv(os.path.join(local_interim_data_path,
                                           'interim_data.csv'),
                              usecols=RAW_FORECAST_FEATURES,
                              header=0,
-                             index_col=False)
+                             index_col=False,
+                             low_memory=False)
     interim_df[FEATURES_NO_TIME] = interim_df[FEATURES_NO_TIME].apply(
         pd.to_numeric, errors='coerce', downcast='float')
     interim_df.dropna(axis=0, inplace=True)
     interim_df = remove_step_zero(interim_df)
     interim_df = add_power_features(interim_df)
     interim_df = add_time_features(interim_df)
+    interim_df.columns = interim_df.columns.str.lstrip()
+    interim_df.columns = interim_df.columns.str.replace(' ', '_')
     interim_df.to_csv(os.path.join(local_processed_data_path,
                                    'processed_data.csv'),
                       index=False)

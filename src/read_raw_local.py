@@ -6,18 +6,20 @@ import click
 import numpy as np
 import pandas as pd
 
+logging.basicConfig(level=logging.INFO)
+
 
 @click.command()
 @click.argument('local_raw_data_path', type=click.Path(exists=True))
 @click.argument('local_interim_data_path', type=click.Path(exists=False))
 def read_raw_local(local_raw_data_path, local_interim_data_path):
     """
-    Read raw data from local disk.
+    Reads raw data from the local raw data directory and saves the interim_data.csv to the interim data directory.
 
+    Args:
     
-    Returns
-    -------
-    None
+        local_raw_data_path (str): Raw data directory
+        local_interim_data_path (str): Interim data directory
     """
     final_df = pd.DataFrame()
     units = []
@@ -38,6 +40,7 @@ def read_raw_local(local_raw_data_path, local_interim_data_path):
                 logging.info(f'Can\'t read {file}')
                 continue
             if current_df is not None:
+                logging.info(f'{file} was read!')
                 name_list = file.split('-')
                 try:
                     unit = np.uint8(name_list[0][-3:].lstrip('0D'))
