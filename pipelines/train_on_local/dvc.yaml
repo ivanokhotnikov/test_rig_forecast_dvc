@@ -1,63 +1,98 @@
+vars:
+  - source_code_path: '..\..\src'
+  - raw_data_path: '..\..\data\raw'
+  - interim_data_path: '..\..\data\interim'
+  - processed_data_path: '..\..\data\processed'
+  - train_data_path: '..\..\data\processed\train'
+  - test_data_path: '..\..\data\processed\test'
+  - models_path: '..\..\models'
+  - metrics_path: '..\..\metrics'
+
 stages:
   read_raw_local:
-    cmd: python ..\..\src\read_raw_local.py ..\..\data\raw ..\..\data\interim
+    cmd: python ${source_code_path}\read_raw_local.py ${raw_data_path} ${interim_data_path}
     deps:
-      - ..\..\src\read_raw_local.py
-      - ..\..\data\raw
+      - ${source_code_path}\read_raw_local.py
+      - ${raw_data_path}
     outs:
-      - ..\..\data\interim\interim_data.csv
+      - ${interim_data_path}\interim_data.csv
 
   build_features:
-    cmd: python ..\..\src\build_features.py ..\..\data\interim ..\..\data\processed
+    cmd: python ${source_code_path}\build_features.py ${interim_data_path} ${processed_data_path}
     deps:
-      - ..\..\src\build_features.py
-      - ..\..\data\interim\interim_data.csv
+      - ${source_code_path}\build_features.py
+      - ${interim_data_path}\interim_data.csv
     outs:
-      - ..\..\data\processed\processed_data.csv
+      - ${processed_data_path}\processed_data.csv
 
   split_data:
-    cmd: python ..\..\src\split_data.py ..\..\data\processed ..\..\data\processed\train ..\..\data\processed\test
+    cmd: python ${source_code_path}\split_data.py ${processed_data_path} ${train_data_path} ${test_data_path}
     deps:
-      - ..\..\src\split_data.py
-      - ..\..\data\processed\processed_data.csv
+      - ${source_code_path}\split_data.py
+      - ${processed_data_path}\processed_data.csv
     outs:
-      - ..\..\data\processed\train\train_data.csv
-      - ..\..\data\processed\test\test_data.csv
+      - ${train_data_path}\train_data.csv
+      - ${test_data_path}\test_data.csv
     params:
       - split_data.train_data_size
 
   train:
-    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
-    deps:
-      - ..\..\src\train.py
-      - ..\..\data\processed\train\train_data.csv
-    outs:
-      - ..\..\models\
-    params:
-      - one_feature
-      - model.lstm_units
-      - model.look_back
-      - train.learning_rate
-      - train.epochs
-      - train.seed
-      - train.patience
-      - train.batch_size
-    metrics:
-      - ..\..\metrics\train.json:
-          cache: false
-    plots:
-      - ..\metrics\train_logs.csv
+    foreach:
+      - DRIVE_POWER
+      - LOAD_POWER
+      - CHARGE_MECH_POWER
+      - CHARGE_HYD_POWER
+      - SERVO_MECH_POWER
+      - SERVO_HYD_POWER
+      - SCAVENGE_POWER
+      - MAIN_COOLER_POWER
+      - GEARBOX_COOLER_POWER
+      - Vibration_1
+      - Vibration_2
+    do:
+      cmd: python ${source_code_path}\train.py ${train_data_path} ${models_path} ${metrics_path} ${item}
+      deps:
+        - ${source_code_path}\train.py
+        - ${train_data_path}\train_data.csv
+      outs:
+        - ${item}.h5
+        - ${item}.joblib
+      params:
+        - model.lstm_units
+        - model.look_back
+        - train.learning_rate
+        - train.epochs
+        - train.seed
+        - train.patience
+        - train.batch_size
+      metrics:
+        - ${metrics_path}\train_${item}.json:
+            cache: false
+      # plots:
+      #   - ${metrics_path}\train_logs.csv
 
   evaluate:
-    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
-    deps:
-      - ..\..\src\evaluate.py
-      - ..\..\data\processed\test\test_data.csv
-      - ..\..\models\
-    params:
-      - one_feature
-    metrics:
-      - ..\..\metrics\eval.json:
-          cache: false
-    plots:
-      - ..\metrics\test_logs.csv
+    foreach:
+      - DRIVE_POWER
+      - LOAD_POWER
+      - CHARGE_MECH_POWER
+      - CHARGE_HYD_POWER
+      - SERVO_MECH_POWER
+      - SERVO_HYD_POWER
+      - SCAVENGE_POWER
+      - MAIN_COOLER_POWER
+      - GEARBOX_COOLER_POWER
+      - Vibration_1
+      - Vibration_2
+    do:
+      cmd: python ${source_code_path}\evaluate.py ${test_data_path} ${models_path} ${metrics_path} ${item}
+      deps:
+        - ${source_code_path}\evaluate.py
+        - ${test_data_path}\test_data.csv
+        - ${item}.joblib
+        - ${item}.h5
+      metrics:
+        - ${metrics_path}\eval_${item}.json:
+            cache: false
+      # plots:
+        # - ..\metrics\test_logs.csv

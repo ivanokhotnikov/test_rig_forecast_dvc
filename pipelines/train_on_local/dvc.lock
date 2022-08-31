@@ -8,32 +8,32 @@ stages:
       size: 352350125
       nfiles: 201
     - path: ..\..\src\read_raw_local.py
-      md5: 1b2a082674d56a49e646b5d834821575
-      size: 2220
+      md5: 900cf17aa463903f0144fc21e234ea06
+      size: 2487
     outs:
     - path: ..\..\data\interim\interim_data.csv
-      md5: 39b565bf62c07a9cd92a4efc64320056
-      size: 284558766
+      md5: 441e5675ed964940ae1a03877321dfc6
+      size: 283473031
   build_features:
     cmd: python ..\..\src\build_features.py ..\..\data\interim ..\..\data\processed
     deps:
     - path: ..\..\data\interim\interim_data.csv
-      md5: 39b565bf62c07a9cd92a4efc64320056
-      size: 284558766
+      md5: 441e5675ed964940ae1a03877321dfc6
+      size: 283473031
     - path: ..\..\src\build_features.py
-      md5: 9c1a463089ecc8cdbe0c06c482791ebc
-      size: 1438
+      md5: 8eb5a1405505508c51e507731b8e4143
+      size: 1875
     outs:
     - path: ..\..\data\processed\processed_data.csv
-      md5: 0486085d24a5003ab410b671d849ed70
-      size: 153694637
+      md5: cc24808797249be7c3179b37d0dfd6f3
+      size: 153694635
   split_data:
     cmd: python ..\..\src\split_data.py ..\..\data\processed ..\..\data\processed\train
       ..\..\data\processed\test
     deps:
     - path: ..\..\data\processed\processed_data.csv
-      md5: 0486085d24a5003ab410b671d849ed70
-      size: 153694637
+      md5: cc24808797249be7c3179b37d0dfd6f3
+      size: 153694635
     - path: ..\..\src\split_data.py
       md5: f89ae4cfb87a60287e515c5157b2674f
       size: 1234
@@ -42,55 +42,514 @@ stages:
         split_data.train_data_size: 0.8
     outs:
     - path: ..\..\data\processed\test\test_data.csv
-      md5: 5cb4d5b5fab99b5643a5b9352bc97f8a
-      size: 30875335
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
     - path: ..\..\data\processed\train\train_data.csv
-      md5: 3082b0b493d901debe77706996d36499
-      size: 122798075
-  train:
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+  train@GEARBOX_COOLER_POWER:
     cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      GEARBOX_COOLER_POWER
     deps:
     - path: ..\..\data\processed\train\train_data.csv
-      md5: 3082b0b493d901debe77706996d36499
-      size: 122798075
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
     - path: ..\..\src\train.py
-      md5: a6a1341ecadd39122d2d8c604158f7a3
-      size: 3260
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
     params:
       params.yaml:
         model.look_back: 120
         model.lstm_units: 5
-        one_feature: true
         train.batch_size: 256
         train.epochs: 3
         train.learning_rate: 0.5
         train.patience: 5
         train.seed: 2507
     outs:
-    - path: ..\..\metrics\train.json
-      md5: 07cefb2f91f2e7716914c1bae44c6c56
-      size: 356
-    - path: ..\..\models\
-      md5: d9c3bf7e92b7e74365e02aa90ba8aaab.dir
-      size: 29328
-      nfiles: 2
-  evaluate:
-    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+    - path: GEARBOX_COOLER_POWER.h5
+      md5: ae4a7b7acb0f5823dd4793fb3bfc3ecd
+      size: 28720
+    - path: GEARBOX_COOLER_POWER.joblib
+      md5: 5cb5cc059839dac07b26e8d856b170ce
+      size: 608
+  train@SERVO_HYD_POWER:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      SERVO_HYD_POWER
     deps:
-    - path: ..\..\data\processed\test\test_data.csv
-      md5: 5cb4d5b5fab99b5643a5b9352bc97f8a
-      size: 30875335
-    - path: ..\..\models\
-      md5: d9c3bf7e92b7e74365e02aa90ba8aaab.dir
-      size: 29328
-      nfiles: 2
-    - path: ..\..\src\evaluate.py
-      md5: 8ca05f5cd0cc0c5c618e21502ecf8d41
-      size: 2084
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
     params:
       params.yaml:
-        one_feature: true
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
     outs:
-    - path: ..\..\metrics\eval.json
-      md5: 3c5ad58299f92708b366145f685965de
+    - path: SERVO_HYD_POWER.h5
+      md5: 53b9a3129003ef7f31186ff5f12f8419
+      size: 28720
+    - path: SERVO_HYD_POWER.joblib
+      md5: 71bee4c242f4bc29a34350594e10545c
+      size: 608
+  train@DRIVE_POWER:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      DRIVE_POWER
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: DRIVE_POWER.h5
+      md5: 650f388d896b7b0bd6bae38e11c8ac73
+      size: 28720
+    - path: DRIVE_POWER.joblib
+      md5: 713c830a83c403956d275d949c03c667
+      size: 608
+  train@CHARGE_HYD_POWER:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      CHARGE_HYD_POWER
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: CHARGE_HYD_POWER.h5
+      md5: d3444f4639fbcfad936827b2c2d437fb
+      size: 28720
+    - path: CHARGE_HYD_POWER.joblib
+      md5: 965d03f45e59aea372c9d1086c0c4a3f
+      size: 608
+  train@CHARGE_MECH_POWER:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      CHARGE_MECH_POWER
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: CHARGE_MECH_POWER.h5
+      md5: f01a86787090626dc78995477ad31754
+      size: 28720
+    - path: CHARGE_MECH_POWER.joblib
+      md5: 92a1b0b2c9228150771b37c66525772d
+      size: 608
+  train@MAIN_COOLER_POWER:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      MAIN_COOLER_POWER
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: MAIN_COOLER_POWER.h5
+      md5: 351d451eaeb5a4f79a40efc9f739f24e
+      size: 28720
+    - path: MAIN_COOLER_POWER.joblib
+      md5: e73857c933e7a5d9dff6b3ef584a8f99
+      size: 608
+  train@Vibration_1:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      Vibration_1
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: Vibration_1.h5
+      md5: e478eb8265a43446e8f0061b498dc2ea
+      size: 28720
+    - path: Vibration_1.joblib
+      md5: 58adeaf1f47302f5fede9b5d492e1804
+      size: 608
+  evaluate@CHARGE_HYD_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      CHARGE_HYD_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: CHARGE_HYD_POWER.h5
+      md5: d3444f4639fbcfad936827b2c2d437fb
+      size: 28720
+    - path: CHARGE_HYD_POWER.joblib
+      md5: 965d03f45e59aea372c9d1086c0c4a3f
+      size: 608
+    outs:
+    - path: CHARGE_HYD_POWER.json
+      md5: 537e2975c915e6d07381a36fb35e22e3
+      size: 77
+  train@SCAVENGE_POWER:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      SCAVENGE_POWER
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: SCAVENGE_POWER.h5
+      md5: 499b5268a4668d248233e7611e267483
+      size: 28720
+    - path: SCAVENGE_POWER.joblib
+      md5: 447491931a5c4d793a64f9cbb2e4fcca
+      size: 608
+  evaluate@Vibration_1:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      Vibration_1
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: Vibration_1.h5
+      md5: e478eb8265a43446e8f0061b498dc2ea
+      size: 28720
+    - path: Vibration_1.joblib
+      md5: 58adeaf1f47302f5fede9b5d492e1804
+      size: 608
+    outs:
+    - path: Vibration_1.json
+      md5: 3547ba46022d81b2e83bb379604eb5b1
       size: 75
+  train@SERVO_MECH_POWER:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      SERVO_MECH_POWER
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: SERVO_MECH_POWER.h5
+      md5: fa7c1fb834f3c6928a25efe69b034c44
+      size: 28720
+    - path: SERVO_MECH_POWER.joblib
+      md5: 24cbc7c09ad8528e231c0f804579535e
+      size: 608
+  evaluate@SERVO_MECH_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      SERVO_MECH_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: SERVO_MECH_POWER.h5
+      md5: fa7c1fb834f3c6928a25efe69b034c44
+      size: 28720
+    - path: SERVO_MECH_POWER.joblib
+      md5: 24cbc7c09ad8528e231c0f804579535e
+      size: 608
+    outs:
+    - path: SERVO_MECH_POWER.json
+      md5: 7f712d3a1b00fb04a416f1253972eec7
+      size: 77
+  evaluate@GEARBOX_COOLER_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      GEARBOX_COOLER_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: GEARBOX_COOLER_POWER.h5
+      md5: ae4a7b7acb0f5823dd4793fb3bfc3ecd
+      size: 28720
+    - path: GEARBOX_COOLER_POWER.joblib
+      md5: 5cb5cc059839dac07b26e8d856b170ce
+      size: 608
+    outs:
+    - path: GEARBOX_COOLER_POWER.json
+      md5: 7b2e1352c8b1edc5367f86327e19d2d1
+      size: 77
+  train@Vibration_2:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      Vibration_2
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: Vibration_2.h5
+      md5: b3690a05222837f2b0f86fb3352fd5bc
+      size: 28720
+    - path: Vibration_2.joblib
+      md5: 7db97e740b4ca44bca2719dcd8059f5c
+      size: 608
+  evaluate@Vibration_2:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      Vibration_2
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: Vibration_2.h5
+      md5: b3690a05222837f2b0f86fb3352fd5bc
+      size: 28720
+    - path: Vibration_2.joblib
+      md5: 7db97e740b4ca44bca2719dcd8059f5c
+      size: 608
+    outs:
+    - path: Vibration_2.json
+      md5: bcf339ab81c97af6b92c9cd2cb8b6a06
+      size: 77
+  evaluate@DRIVE_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      DRIVE_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: DRIVE_POWER.h5
+      md5: 650f388d896b7b0bd6bae38e11c8ac73
+      size: 28720
+    - path: DRIVE_POWER.joblib
+      md5: 713c830a83c403956d275d949c03c667
+      size: 608
+    outs:
+    - path: DRIVE_POWER.json
+      md5: 472acb79d68e935143f85d6cc84d8efd
+      size: 77
+  train@LOAD_POWER:
+    cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
+      LOAD_POWER
+    deps:
+    - path: ..\..\data\processed\train\train_data.csv
+      md5: b6f9560ab4aafdb431a86b9f19702772
+      size: 122798073
+    - path: ..\..\src\train.py
+      md5: 2a2ca867f8c472d48471d65a93b6b395
+      size: 3659
+    params:
+      params.yaml:
+        model.look_back: 120
+        model.lstm_units: 5
+        train.batch_size: 256
+        train.epochs: 3
+        train.learning_rate: 0.5
+        train.patience: 5
+        train.seed: 2507
+    outs:
+    - path: LOAD_POWER.h5
+      md5: 4f89bb63ea116bf21da3617e656239f5
+      size: 28720
+    - path: LOAD_POWER.joblib
+      md5: f6f509754bfaf65abf26b86be83eaca6
+      size: 608
+  evaluate@MAIN_COOLER_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      MAIN_COOLER_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: MAIN_COOLER_POWER.h5
+      md5: 351d451eaeb5a4f79a40efc9f739f24e
+      size: 28720
+    - path: MAIN_COOLER_POWER.joblib
+      md5: e73857c933e7a5d9dff6b3ef584a8f99
+      size: 608
+    outs:
+    - path: MAIN_COOLER_POWER.json
+      md5: 0210f34604a46c5e0953a569cc738600
+      size: 75
+  evaluate@SERVO_HYD_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      SERVO_HYD_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: SERVO_HYD_POWER.h5
+      md5: 53b9a3129003ef7f31186ff5f12f8419
+      size: 28720
+    - path: SERVO_HYD_POWER.joblib
+      md5: 71bee4c242f4bc29a34350594e10545c
+      size: 608
+    outs:
+    - path: SERVO_HYD_POWER.json
+      md5: e715ade6a4ee2a89bbdd1dcb46f5bb5f
+      size: 77
+  evaluate@LOAD_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      LOAD_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: LOAD_POWER.h5
+      md5: 4f89bb63ea116bf21da3617e656239f5
+      size: 28720
+    - path: LOAD_POWER.joblib
+      md5: f6f509754bfaf65abf26b86be83eaca6
+      size: 608
+    outs:
+    - path: LOAD_POWER.json
+      md5: 0659ddff9dfccee5b341aac80f703b42
+      size: 77
+  evaluate@SCAVENGE_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      SCAVENGE_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: SCAVENGE_POWER.h5
+      md5: 499b5268a4668d248233e7611e267483
+      size: 28720
+    - path: SCAVENGE_POWER.joblib
+      md5: 447491931a5c4d793a64f9cbb2e4fcca
+      size: 608
+    outs:
+    - path: SCAVENGE_POWER.json
+      md5: 5a75670502dea186796a322bc5be385a
+      size: 77
+  evaluate@CHARGE_MECH_POWER:
+    cmd: python ..\..\src\evaluate.py ..\..\data\processed\test ..\..\models ..\..\metrics
+      CHARGE_MECH_POWER
+    deps:
+    - path: ..\..\data\processed\test\test_data.csv
+      md5: 9e71fe9883293bbff6c43d5022ccb7fe
+      size: 30875333
+    - path: ..\..\src\evaluate.py
+      md5: 1e14e0e96b6119813be91601cb6dc967
+      size: 1783
+    - path: CHARGE_MECH_POWER.h5
+      md5: f01a86787090626dc78995477ad31754
+      size: 28720
+    - path: CHARGE_MECH_POWER.joblib
+      md5: 92a1b0b2c9228150771b37c66525772d
+      size: 608
+    outs:
+    - path: CHARGE_MECH_POWER.json
+      md5: b3fd9e9bccc84dd3989ce84bf638964c
+      size: 77
