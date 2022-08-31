@@ -1,0 +1,81 @@
+features:
+  DRIVE_POWER:
+    name: 'DRIVE_POWER'
+    model: '..\..\models\model_DRIVE_POWER.h5'
+    scaler: '..\..\models\scaler_DRIVE_POWER.joblib'
+    train: '..\..\metrics\train_DRIVE_POWER.json'
+    eval: '..\..\metrics\eval_DRIVE_POWER.json'
+  LOAD_POWER:
+    name: 'LOAD_POWER'
+    model: '..\..\models\LOAD_POWER.h5'
+    scaler: '..\..\models\LOAD_POWER.joblib'
+    train: '..\..\metrics\train_LOAD_POWER.json'
+    eval: '..\..\metrics\eval_LOAD_POWER.json'
+  CHARGE_MECH_POWER:
+    name: 'CHARGE_MECH_POWER'
+    model: '..\..\models\CHARGE_MECH_POWER.h5'
+    scaler: '..\..\models\CHARGE_MECH_POWER.joblib'
+    train: '..\..\metrics\train_CHARGE_MECH_POWER.json'
+    eval: '..\..\metrics\eval_CHARGE_MECH_POWER.json'
+  CHARGE_HYD_POWER:
+    name: 'CHARGE_HYD_POWER'
+    model: '..\..\models\CHARGE_HYD_POWER.h5'
+    scaler: '..\..\models\CHARGE_HYD_POWER.joblib'
+    train: '..\..\metrics\train_CHARGE_HYD_POWER.json'
+    eval: '..\..\metrics\eval_CHARGE_HYD_POWER.json'
+  SERVO_MECH_POWER:
+    name: 'SERVO_MECH_POWER'
+    model: '..\..\models\SERVO_MECH_POWER.h5'
+    scaler: '..\..\models\SERVO_MECH_POWER.joblib'
+    train: '..\..\metrics\train_SERVO_MECH_POWER.json'
+    eval: '..\..\metrics\eval_SERVO_MECH_POWER.json'
+  SERVO_HYD_POWER:
+    name: 'SERVO_HYD_POWER'
+    model: '..\..\models\SERVO_HYD_POWER.h5'
+    scaler: '..\..\models\SERVO_HYD_POWER.joblib'
+    train: '..\..\metrics\train_SERVO_HYD_POWER.json'
+    eval: '..\..\metrics\eval_SERVO_HYD_POWER.json'
+  SCAVENGE_POWER:
+    name: 'SCAVENGE_POWER'
+    model: '..\..\models\SCAVENGE_POWER.h5'
+    scaler: '..\..\models\SCAVENGE_POWER.joblib'
+    train: '..\..\metrics\train_SCAVENGE_POWER.json'
+    eval: '..\..\metrics\eval_SCAVENGE_POWER.json'
+  MAIN_COOLER_POWER:
+    name: 'MAIN_COOLER_POWER'
+    model: '..\..\models\MAIN_COOLER_POWER.h5'
+    scaler: '..\..\models\MAIN_COOLER_POWER.joblib'
+    train: '..\..\metrics\train_MAIN_COOLER_POWER.json'
+    eval: '..\..\metrics\eval_MAIN_COOLER_POWER.json'
+  GEARBOX_COOLER_POWER:
+    name: 'GEARBOX_COOLER_POWER'
+    model: '..\..\models\GEARBOX_COOLER_POWER.h5'
+    scaler: '..\..\models\GEARBOX_COOLER_POWER.joblib'
+    train: '..\..\metrics\train_GEARBOX_COOLER_POWER.json'
+    eval: '..\..\metrics\eval_GEARBOX_COOLER_POWER.json'
+  Vibration_1:
+    name: 'Vibration_1'
+    model: '..\..\models\Vibration_1.h5'
+    scaler: '..\..\models\Vibration_1.joblib'
+    train: '..\..\metrics\train_Vibration_1.json'
+    eval: '..\..\metrics\eval_Vibration_1.json'
+  Vibration_2:
+    name: 'Vibration_2'
+    model: '..\..\models\Vibration_2.h5'
+    scaler: '..\..\models\Vibration_2.joblib'
+    train: '..\..\metrics\train_Vibration_2.json'
+    eval: '..\..\metrics\eval_Vibration_2.json'
+
+split_data:
+  train_data_size: 0.8
+
+train:
+  learning_rate: .5
+  epochs: 3
+  seed: 2507
+  patience: 5
+  batch_size: 256
+
+model:
+  lstm_units: 5
+  look_back: 120

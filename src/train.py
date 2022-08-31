@@ -32,6 +32,8 @@ def train(local_train_data_path, local_models_path, local_metrics_path,
                            index_col=False)
     if not os.path.exists(local_models_path):
         os.makedirs(local_models_path)
+    if not os.path.exists(local_metrics_path):
+        os.makedirs(local_metrics_path)
     train_data = train_df[feature].values.reshape(-1, 1)
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled_train = scaler.fit_transform(train_data)

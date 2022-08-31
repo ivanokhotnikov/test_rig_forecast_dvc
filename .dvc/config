@@ -1,5 +1,7 @@
 [core]
     remote = gcs
     autostage = true
+[feature]
+    parametrization = true
 ['remote "gcs"']
     url = gs://test_rig_data

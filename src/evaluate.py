@@ -28,22 +28,20 @@ def evaluate(local_test_data_path, local_models_path, local_metrics_path,
     params = params_show()
     test_df = pd.read_csv(os.path.join(local_test_data_path, 'test_data.csv'),
                           index_col=False)
-    if not os.path.exists(local_metrics_path):
-        os.makedirs(local_metrics_path)
     test_data = test_df[feature].values.reshape(-1, 1)
-    scaler = load(os.path.join(local_models_path, feature + '.joblib'))
+    scaler = load(os.path.join(local_models_path, f'{feature}.joblib'))
     scaled_test = scaler.transform(test_data)
     x_test, y_test = create_sequences(scaled_test,
                                       lookback=params['model']['look_back'],
                                       inference=False)
     forecaster = keras.models.load_model(
-        os.path.join(local_models_path, feature + '.h5'))
+        os.path.join(local_models_path, f'{feature}.h5'))
     results = forecaster.evaluate(x_test,
                                   y_test,
                                   verbose=1,
                                   batch_size=params['train']['batch_size'],
                                   return_dict=True)
-    with open(os.path.join(local_models_path, f'eval_{feature}.json'),
+    with open(os.path.join(local_metrics_path, f'eval_{feature}.json'),
               'w') as f:
         f.write(json.dumps(results))
 
