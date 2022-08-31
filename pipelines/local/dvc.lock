@@ -257,19 +257,19 @@ stages:
     - path: ..\..\data\processed\test\test_data.csv
       md5: 9e71fe9883293bbff6c43d5022ccb7fe
       size: 30875333
-    - path: ..\..\src\evaluate.py
-      md5: 1e14e0e96b6119813be91601cb6dc967
-      size: 1783
-    - path: CHARGE_HYD_POWER.h5
-      md5: d3444f4639fbcfad936827b2c2d437fb
+    - path: ..\..\models\CHARGE_HYD_POWER.h5
+      md5: 54556326d3dbf3e84daf143bc1fe4c5f
       size: 28720
-    - path: CHARGE_HYD_POWER.joblib
+    - path: ..\..\models\CHARGE_HYD_POWER.joblib
       md5: 965d03f45e59aea372c9d1086c0c4a3f
       size: 608
+    - path: ..\..\src\evaluate.py
+      md5: 1a89ef093794762bc48ee4e4f7342951
+      size: 1996
     outs:
-    - path: CHARGE_HYD_POWER.json
-      md5: 537e2975c915e6d07381a36fb35e22e3
-      size: 77
+    - path: ..\..\metrics\eval_CHARGE_HYD_POWER.json
+      md5: dcd8a1db805ad23aae6b308fef38d408
+      size: 76
   train@SCAVENGE_POWER:
     cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
       SCAVENGE_POWER
@@ -375,19 +375,19 @@ stages:
     - path: ..\..\data\processed\test\test_data.csv
       md5: 9e71fe9883293bbff6c43d5022ccb7fe
       size: 30875333
-    - path: ..\..\src\evaluate.py
-      md5: 1e14e0e96b6119813be91601cb6dc967
-      size: 1783
-    - path: GEARBOX_COOLER_POWER.h5
-      md5: ae4a7b7acb0f5823dd4793fb3bfc3ecd
+    - path: ..\..\models\GEARBOX_COOLER_POWER.h5
+      md5: c4c3e6fbf37f1bc9811b0ee6891b061b
       size: 28720
-    - path: GEARBOX_COOLER_POWER.joblib
+    - path: ..\..\models\GEARBOX_COOLER_POWER.joblib
       md5: 5cb5cc059839dac07b26e8d856b170ce
       size: 608
+    - path: ..\..\src\evaluate.py
+      md5: 1a89ef093794762bc48ee4e4f7342951
+      size: 1996
     outs:
-    - path: GEARBOX_COOLER_POWER.json
-      md5: 7b2e1352c8b1edc5367f86327e19d2d1
-      size: 77
+    - path: ..\..\metrics\eval_GEARBOX_COOLER_POWER.json
+      md5: b2a78036aea14ffd73df530188b9a0da
+      size: 76
   train@Vibration_2:
     cmd: python ..\..\src\train.py ..\..\data\processed\train ..\..\models ..\..\metrics
       Vibration_2
@@ -584,5 +584,5 @@ stages:
       size: 1996
     outs:
     - path: ..\..\metrics\eval_CHARGE_MECH_POWER.json
-      md5: a27283bdffbcac1f584f3a22f20cfbdc
-      size: 77
+      md5: 1b126a7c88256da1071874a77af7322a
+      size: 90

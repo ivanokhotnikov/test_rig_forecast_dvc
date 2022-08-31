@@ -1,8 +1,8 @@
 features:
   DRIVE_POWER:
     name: 'DRIVE_POWER'
-    model: '..\..\models\model_DRIVE_POWER.h5'
-    scaler: '..\..\models\scaler_DRIVE_POWER.joblib'
+    model: '..\..\models\DRIVE_POWER.h5'
+    scaler: '..\..\models\DRIVE_POWER.joblib'
     train: '..\..\metrics\train_DRIVE_POWER.json'
     eval: '..\..\metrics\eval_DRIVE_POWER.json'
   LOAD_POWER:
