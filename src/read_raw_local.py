@@ -48,7 +48,6 @@ def read_raw_local(local_raw_data_path, local_interim_data_path):
                     unit = np.uint8(
                         name_list[0].split('_')[0][-3:].lstrip('0D'))
                 units.append(unit)
-                # current_df['ARMANI'] = 1 if name_list[0][3] == '2' else 0
                 current_df['UNIT'] = unit
                 current_df['TEST'] = np.uint8(units.count(unit))
                 final_df = pd.concat((final_df, current_df), ignore_index=True)
