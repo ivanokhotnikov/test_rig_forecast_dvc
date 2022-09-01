@@ -70,12 +70,12 @@ split_data:
   train_data_size: 0.8
 
 train:
-  learning_rate: .5
-  epochs: 3
-  seed: 2507
+  learning_rate: .01
+  epochs: 20
+  seed: 3108
   patience: 5
   batch_size: 256
 
 model:
   lstm_units: 5
-  look_back: 120
+  look_back: 240

@@ -8,7 +8,7 @@ vars:
   - test_data_path: '..\..\data\processed\test'
   - models_path: '..\..\models'
   - metrics_path: '..\..\metrics'
-
+  
 stages:
   read_raw_local:
     cmd: python ${source_code_path}\read_raw_local.py ${raw_data_path} ${interim_data_path}
@@ -55,12 +55,8 @@ stages:
         - train.seed
         - train.patience
         - train.batch_size
-      metrics:
-        - ${item.train}:
-            cache: false
-      #TODO
-      # plots:
-      #   - ${metrics_path}\train_logs.csv
+      plots:
+        - ${item.train}
 
   evaluate:
     foreach: ${features}
